@@ -1,0 +1,19 @@
+import tensorflow as tf
+import tensorflow_hub as hub
+import numpy as np
+
+# Load pre-trained VGG19 model
+hub_model = hub.load('https://tfhub.dev/google/magenta/arbitrary-image-stylization-v1-256/2')
+
+# Convert images to tensors
+content_image_tensor = tf.constant(np.array(content_img), dtype=tf.float32)[tf.newaxis, ...]
+style_image_tensor = tf.constant(np.array(style_img), dtype=tf.float32)[tf.newaxis, ...]
+
+# Apply style transfer
+stylized_image_tensor = hub_model(content_image_tensor, style_image_tensor)[0]
+
+# Convert the output tensor back to an image
+stylized_image = tf.keras.preprocessing.image.array_to_img(tf.squeeze(stylized_image_tensor, axis=0))
+
+# Display the stylized image
+display_image(stylized_image, title="Stylized Image")
